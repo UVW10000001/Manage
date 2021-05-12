@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nebula.dao.OrdersDao">
+
+          
+    <select id="getAllOrders" resultType="orders" parameterType="orders">
+           select * from orders
+    </select>
+    
+    <insert id="addOrders" parameterType="orders">
+    INSERT INTO orders(username,phone,petname,date,combo)
+    
+    VALUES (#{orders.username},#{orders.phone},#{orders.petname},#{orders.date},#{orders.combo});
+    </insert>
+    
+    <delete id="delOrders" parameterType="orders">
+    DELETE FROM orders WHERE pid = #{orders.pid} 
+    </delete>
+    
+     <update id="updateOrders" parameterType="orders">
+    UPDATE orders SET username=#{orders.username} , phone=#{orders.phone},petname=#{orders.petname},
+    date=#{orders.date},combo=#{orders.combo}
+    WHERE pid = #{orders.pid} 
+    </update>
+    
+    <select id="findOrdersById"  parameterType="int" resultType="orders">
+    select * FROM orders where pid = #{pid}
+    </select>
+</mapper>

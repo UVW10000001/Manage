@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+     <!-- 开启注解扫描-->
+     <context:component-scan base-package="com.nebula.*"></context:component-scan>
+    <!--加载properties 配置文件-->
+    <context:property-placeholder location="classpath*:db.properties"></context:property-placeholder>
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+       
+    </bean>
+
+    <!--配置mybatis需要的sqlsessionFactory
+     dataSource  使用的是哪个数据源
+     mapperLocations  加载接口对应的mapper文件
+      typeAliasesPackage  设置别名-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+           <property name="dataSource" ref="dataSource"></property>
+           <property name="mapperLocations" value="classpath*:mapper/*Mapper.xml"></property>
+           <property name="typeAliasesPackage" value="com.nebula.bean" />
+           <!-- <property name="configLocation" value="classpath:mybatis-config.xml"></property> -->
+    </bean>
+
+    <!-- 将mybatis的sqlSessionFactory 交给 spring进行管理    得到 接口的实例对象
+    MapperScannerConfigurer    使用哪个sqlSessionFactory 映射哪些接口
+    得到实例对象    会自动注入到容器中 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+          <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+           <property name="basePackage" value="com.nebula.dao"></property>
+    </bean>
+
+
+
+
+
+
+</beans>
